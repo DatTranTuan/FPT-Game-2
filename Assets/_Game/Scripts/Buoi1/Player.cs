@@ -52,13 +52,6 @@ public class Player : Character
             }
         }
     }
-    void flip()
-    {
-        facingRight = !facingRight;
-        Vector3 theScale = transform.localScale;
-        theScale.x *= -1;
-        transform.localScale = theScale;
-    }
     // void OnCollisionEnter2D(Collision2D other)
     // {
     //     if (other.gameObject.tag == "ground")
@@ -68,9 +61,9 @@ public class Player : Character
     // }
     private bool CheckGrounded()
     {
-        Debug.DrawLine(transform.position, transform.position + Vector3.down * 0.25f, Color.red);
+        Debug.DrawLine(transform.position, transform.position + Vector3.down * 0.2f, Color.red);
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.25f, groundLayer);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.2f, groundLayer);
 
         //if (hit.collider != null)
         //{
@@ -84,6 +77,15 @@ public class Player : Character
         //}
 
         return hit.collider != null;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == CacheString.COIN_LAYER)
+        {
+            UIManager.Instance.Coin++;
+            Destroy(collision.gameObject);
+        }
     }
 
 }
