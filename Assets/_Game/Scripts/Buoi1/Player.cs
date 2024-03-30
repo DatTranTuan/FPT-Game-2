@@ -9,7 +9,6 @@ public class Player : Character
     public float jumHeight;
     Rigidbody2D myBody;
     Animator myAnim;
-    bool facingRight;
     bool grounded;
     public LayerMask groundLayer;
 
@@ -17,7 +16,6 @@ public class Player : Character
     {
         myBody = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
-        facingRight = true;
     }
     void Update()
     {
