@@ -5,12 +5,19 @@ using UnityEngine;
 
 public class Player : Character
 {
+    [SerializeField] private GameObject coinBullet;
+    [SerializeField] private Transform shootPos;
+
+    [SerializeField] private GameObject cb;
+
     public float maxSpeed;
     public float jumHeight;
     Rigidbody2D myBody;
     Animator myAnim;
     bool grounded;
     public LayerMask groundLayer;
+
+    public GameObject Cb { get => cb; set => cb = value; }
 
     void Start()
     {
@@ -32,7 +39,7 @@ public class Player : Character
             myBody.velocity = new Vector2(move * maxSpeed, myBody.velocity.y);
 
             // horizontal > 0 -> tra ve 0, neu horizontal <= 0 -> tra ve 180
-            transform.rotation = Quaternion.Euler(new Vector3(0, move > 0 ? 0 : 180, 0));
+            //transform.rotation = Quaternion.Euler(new Vector3(0, move > 0 ? 0 : 180, 0));
             //transform.localScale = new Vector3(horizontal, 1, 1);
         }
         else if (grounded)
@@ -41,13 +48,18 @@ public class Player : Character
             myBody.velocity = Vector2.zero;
         }
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Z))
         {
             if (grounded)
             {
                 grounded = false;
                 myBody.velocity = new Vector2(myBody.velocity.x, jumHeight);
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            ShootCoin();
         }
     }
     // void OnCollisionEnter2D(Collision2D other)
@@ -75,6 +87,15 @@ public class Player : Character
         //}
 
         return hit.collider != null;
+    }
+
+    public void ShootCoin()
+    {
+        if (UIManager.Instance.Coin > 0)
+        {
+            Cb =  Instantiate(coinBullet, shootPos);
+            UIManager.Instance.Coin--;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

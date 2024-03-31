@@ -4,75 +4,36 @@ using UnityEngine;
 
 public class Bot : Character
 {
-    [SerializeField] private Transform startPoint;
-    [SerializeField] private Transform endPoint;
+    [SerializeField] private int _direction; //1 right; -1 left
+    [SerializeField] private Rigidbody2D _rb; //Boar
+    [SerializeField] private float _speedBoar; //Boar move speed
 
-    [SerializeField] private Transform bot;
-
-    [SerializeField] private float speed;
-
-    [SerializeField] private int direcction = 1;
-    private bool isRight;
-    private bool isAble = false;
-
-    private void Update()
+    void Start()
     {
-        Vector2 target = currentMovementTarget();
+        _direction = -1;
+        _speedBoar = 5f;
+    }
 
-        bot.position = Vector2.MoveTowards(bot.position, target, speed * Time.deltaTime);
-        ChangeAnim("Run");
+    // Update is called once per frame
+    void Update()
+    {
+        _rb.velocity = new Vector3(_speedBoar * _direction, 0, 0);
+    }
 
-        float distance = Vector2.Distance(target, bot.position);
-
-        if (distance <= 0.1f)
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.layer == CacheString.WALL_LAYER)
         {
-            direcction *= -1;
-        }
-
-        //if (Vector3.Distance(bot.transform.position, startPoint.position) <= 0.1f)
-        //{
-        //    ChangeDirection(!isRight);
-        //}
-        //else if (Vector3.Distance(bot.transform.position, endPoint.position) <= 0.1f)
-        //{
-        //    ChangeDirection(!isRight);
-        //}
-
-        if (direcction <= - 1)
-        {
-            if (isAble == false)
-            {
-                ChangeDirection(!isRight);
-                isAble = false;
-            }
+            _direction *= -1;
+            _rb.gameObject.transform.localScale = new Vector3(_rb.gameObject.transform.localScale.x * -1, 1, 1);
         }
     }
 
-    private Vector2 currentMovementTarget()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (direcction == 1)
+        if (collision.gameObject.layer == CacheString.PLAYER_LAYER)
         {
-            return startPoint.position;
+            Time.timeScale = 0f;
         }
-        else
-        {
-            return endPoint.position;
-        }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (bot != null && startPoint != null && endPoint != null)
-        {
-            Gizmos.DrawLine(bot.position, startPoint.position);
-            Gizmos.DrawLine(bot.position, endPoint.position);
-        }
-    }
-
-    public void ChangeDirection(bool isRight)
-    {
-        this.isRight = isRight;
-        isAble = true;
-        transform.rotation = isRight ? Quaternion.Euler(Vector3.zero) : Quaternion.Euler(Vector3.up * 180);
     }
 }

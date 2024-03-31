@@ -5,6 +5,11 @@ using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
+    [SerializeField] private GameObject boarPrefab;
+    [SerializeField] private GameObject plantPrefab;
+
+    [SerializeField] private Transform botContain;
+
     public List<GameObject> listGround; //Mảng các block bản đồ
     public List<GameObject> listCoin; //Mảng các block bản đồ
 
@@ -25,6 +30,7 @@ public class MapManager : MonoBehaviour
 
 
     int groundLen;
+    int groundHeight;
 
     // Start is called before the first frame update
     void Start()
@@ -82,11 +88,27 @@ public class MapManager : MonoBehaviour
 
             switch (groundID)
             {
-                case 0: groundLen = 2; break;
-                case 1: groundLen = 3; break;
+                case 0: 
+                    groundLen = 2;
+                    groundHeight = 3;
+                    break;
+                case 1: 
+                    groundLen = 3;
+                    groundHeight = 2;
+                    break;
                     //case 2: groundLen = 4; break;
                     //case 3: groundLen = 6; break;
                     //case 4: groundLen = 8; break;
+            }
+
+            float random = Random.Range(0, 1f);
+            if (random <= 0.3f)
+            {
+                Instantiate(plantPrefab, new Vector3(nextPos.x + 1, nextPos.y + groundHeight, 0), Quaternion.identity, botContain);
+            }
+            else if (random >0.7f)
+            {
+                Instantiate(boarPrefab, new Vector3(nextPos.x + 1, nextPos.y + groundHeight, 0), Quaternion.identity, botContain);
             }
 
             endPos = new Vector3(nextPos.x + groundLen, -2f, 0f);
