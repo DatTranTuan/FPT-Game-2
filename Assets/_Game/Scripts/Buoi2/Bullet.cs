@@ -17,6 +17,7 @@ public class Bullet : MonoBehaviour
         if (collision.gameObject.layer == CacheString.PLAYER_LAYER)
         {
             Time.timeScale = 0f;
+            UIManager.Instance.LosingPanel.gameObject.SetActive(true);
         }
     }
 }

@@ -19,6 +19,6 @@ public class Parralux : MonoBehaviour
     private void Update()
     {
         distance += Time.deltaTime * speed;
-        material.SetTextureOffset("_MainTex", Vector2.right* distance);
+        material.SetTextureOffset("_MainTex", Vector2.left* distance);
     }
 }

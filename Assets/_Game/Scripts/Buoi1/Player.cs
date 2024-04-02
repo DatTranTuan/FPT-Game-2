@@ -8,7 +8,7 @@ public class Player : Character
     [SerializeField] private GameObject coinBullet;
     [SerializeField] private Transform shootPos;
 
-    [SerializeField] private GameObject cb;
+    private GameObject cb;
 
     public float maxSpeed;
     public float jumHeight;
@@ -91,10 +91,10 @@ public class Player : Character
 
     public void ShootCoin()
     {
-        if (UIManager.Instance.Coin > 0)
+        if (UIManager.Instance.Coin >= 1)
         {
             Cb =  Instantiate(coinBullet, shootPos);
-            UIManager.Instance.Coin--;
+            UIManager.Instance.Coin -= 1;
         }
     }
 
@@ -104,6 +104,13 @@ public class Player : Character
         {
             UIManager.Instance.Coin++;
             Destroy(collision.gameObject);
+            UIManager.Instance.CheckPref();
+        }
+
+        if (collision.gameObject.layer == CacheString.ENEMY_LAYER)
+        {
+            Time.timeScale = 0f;
+            UIManager.Instance.LosingPanel.gameObject.SetActive(true);
         }
     }
 

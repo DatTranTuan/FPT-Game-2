@@ -8,4 +8,5 @@ public class CacheString : MonoBehaviour
     public static int WALL_LAYER = 7;
     public static int ENEMY_LAYER = 8;
     public static int PLAYER_LAYER = 9;
+    public static int BOAR_LAYER = 10;
 }

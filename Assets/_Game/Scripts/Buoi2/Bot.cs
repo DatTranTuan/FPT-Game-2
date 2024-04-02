@@ -8,6 +8,10 @@ public class Bot : Character
     [SerializeField] private Rigidbody2D _rb; //Boar
     [SerializeField] private float _speedBoar; //Boar move speed
 
+    private int life = 2;
+
+    public int Life { get => life; set => life = value; }
+
     void Start()
     {
         _direction = -1;
@@ -18,6 +22,12 @@ public class Bot : Character
     void Update()
     {
         _rb.velocity = new Vector3(_speedBoar * _direction, 0, 0);
+    }
+
+    public void OnDeath()
+    {
+        Destroy(gameObject);
+        life = 2;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -33,6 +43,7 @@ public class Bot : Character
     {
         if (collision.gameObject.layer == CacheString.PLAYER_LAYER)
         {
+            UIManager.Instance.LosingPanel.gameObject.SetActive(true);
             Time.timeScale = 0f;
         }
     }
