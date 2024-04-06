@@ -26,7 +26,7 @@ public class UIManager : Singleton<UIManager>
     {
         Time.timeScale = 1f;
         //playAgainBtn.onClick.AddListener(OnClickPlayBtn);
-        highScoreText.text = "Score: " + PlayerPrefs.GetInt("HighScore",0).ToString();
+        highScoreText.text = "HIScore: " + PlayerPrefs.GetInt("HighScore",0).ToString();
     }
 
     private void Update()
@@ -39,7 +39,7 @@ public class UIManager : Singleton<UIManager>
         if (coin > PlayerPrefs.GetInt("HighScore", 0))
         {
             PlayerPrefs.SetInt("HighScore", coin);
-            highScoreText.text = "Score: " + coin.ToString();
+            highScoreText.text = "HIScore: " + coin.ToString();
         }
     }
 
