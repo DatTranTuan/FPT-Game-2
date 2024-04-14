@@ -7,8 +7,12 @@ public class Player : Character
 {
     [SerializeField] private GameObject coinBullet;
     [SerializeField] private Transform shootPos;
+    [SerializeField] private Rigidbody2D rb;
 
     private GameObject cb;
+
+    private bool moving;
+
 
     public float maxSpeed;
     public float jumHeight;
@@ -23,6 +27,8 @@ public class Player : Character
     {
         myBody = GetComponent<Rigidbody2D>();
         myAnim = GetComponent<Animator>();
+
+        moving = true;
     }
     void Update()
     {
@@ -34,19 +40,19 @@ public class Player : Character
             ChangeAnim("Run");
         }
 
-        if (Mathf.Abs(move) > 0.1f)
-        {
-            myBody.velocity = new Vector2(move * maxSpeed, myBody.velocity.y);
+        //if (Mathf.Abs(move) > 0.1f)
+        //{
+        //    myBody.velocity = new Vector2(move * maxSpeed, myBody.velocity.y);
 
-            // horizontal > 0 -> tra ve 0, neu horizontal <= 0 -> tra ve 180
-            //transform.rotation = Quaternion.Euler(new Vector3(0, move > 0 ? 0 : 180, 0));
-            //transform.localScale = new Vector3(horizontal, 1, 1);
-        }
-        else if (grounded)
-        {
-            ChangeAnim("Idle");
-            myBody.velocity = Vector2.zero;
-        }
+        //    // horizontal > 0 -> tra ve 0, neu horizontal <= 0 -> tra ve 180
+        //    //transform.rotation = Quaternion.Euler(new Vector3(0, move > 0 ? 0 : 180, 0));
+        //    //transform.localScale = new Vector3(horizontal, 1, 1);
+        //}
+        //else if (grounded)
+        //{
+        //    ChangeAnim("Idle");
+        //    myBody.velocity = Vector2.zero;
+        //}
 
         if (Input.GetKey(KeyCode.Z))
         {
@@ -57,10 +63,30 @@ public class Player : Character
             }
         }
 
+        if (moving)
+        {
+            ChangeAnim("Run");
+            rb.velocity = new Vector2(5f, rb.velocity.y);
+        }
+
+        if (Input.GetKey(KeyCode.Q))
+        {
+            rb.velocity = Vector2.zero;
+            ChangeAnim("Idle");
+            moving = false;
+        }
+        else
+        {
+            ChangeAnim("Run");
+            rb.velocity = new Vector2(5f, rb.velocity.y);
+        }
+
         if (Input.GetKeyDown(KeyCode.X))
         {
             ShootCoin();
         }
+
+        
     }
     // void OnCollisionEnter2D(Collision2D other)
     // {
@@ -112,6 +138,25 @@ public class Player : Character
             Time.timeScale = 0f;
             UIManager.Instance.LosingPanel.gameObject.SetActive(true);
         }
+
+        
     }
 
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == CacheString.APPLE_LAYER)
+        {
+            if (GameManager.Instance.Slider.value < 1f)
+            {
+                GameManager.Instance.Slider.value += 0.2f;
+            }
+
+            if (GameManager.Instance.Heal < 5)
+            {
+                GameManager.Instance.Heal++;
+            }
+
+            Destroy(collision.gameObject);
+        }
+    }
 }

@@ -8,6 +8,8 @@ public class MapManager : MonoBehaviour
     [SerializeField] private GameObject boarPrefab;
     [SerializeField] private GameObject plantPrefab;
 
+    [SerializeField] private GameObject applePrefab;
+
     [SerializeField] private Transform botContain;
 
     public List<GameObject> listGround; //Mảng các block bản đồ
@@ -109,6 +111,11 @@ public class MapManager : MonoBehaviour
             else if (random >0.7f)
             {
                 Instantiate(boarPrefab, new Vector3(nextPos.x + 1, nextPos.y + groundHeight, 0), Quaternion.identity, botContain);
+            }
+
+            if (random <= 0.5f)
+            {
+                Instantiate(applePrefab, new Vector3(nextPos.x + 2, nextPos.y + groundHeight, 0), Quaternion.identity, botContain);
             }
 
             endPos = new Vector3(nextPos.x + groundLen, -2f, 0f);

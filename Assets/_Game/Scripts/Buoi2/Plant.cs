@@ -1,13 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Plant : MonoBehaviour
+public class Plant : Character
 {
     public GameObject _bullet; //prefab viên đạn
     public Transform _bulletPos; //Vị trí bắn đạn //Hôm nay code bắn đạn theo timer
     public float _timer; // để public để nhìn khi chạy
     [SerializeField] private Animator _animator;
+    [SerializeField] private Slider slider;
+
+    private int heath = 2;
+
+    public int Heath { get => heath; set => heath = value; }
+
     // Gõ các yêu cầu ở đây
 
     void Update()
@@ -27,5 +34,10 @@ public class Plant : MonoBehaviour
     private void PlaintShoot()
     {
         Instantiate(_bullet, _bulletPos.position, Quaternion.identity);
+    }
+
+    public void GetShot(float currentHeath, float maxHeath)
+    {
+        slider.value = currentHeath / maxHeath;
     }
 }

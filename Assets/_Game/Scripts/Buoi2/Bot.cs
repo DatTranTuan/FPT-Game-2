@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Bot : Character
 {
@@ -8,12 +9,19 @@ public class Bot : Character
     [SerializeField] private Rigidbody2D _rb; //Boar
     [SerializeField] private float _speedBoar; //Boar move speed
 
-    private int life = 2;
+    [SerializeField] private Slider slider;
+
+    private int life = 3;
+    private int iCount;
+
+    private bool isMoving;
 
     public int Life { get => life; set => life = value; }
 
     void Start()
     {
+        iCount = 1;
+        isMoving = true;
         _direction = -1;
         _speedBoar = 5f;
     }
@@ -21,13 +29,32 @@ public class Bot : Character
     // Update is called once per frame
     void Update()
     {
-        _rb.velocity = new Vector3(_speedBoar * _direction, 0, 0);
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            _rb.velocity = Vector2.zero;
+            isMoving = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            isMoving = true;
+        }
+
+        if (isMoving)
+        {
+            _rb.velocity = new Vector3(_speedBoar * _direction, 0, 0);
+        }
     }
 
     public void OnDeath()
     {
         Destroy(gameObject);
         life = 2;
+    }
+
+    public void GetShot(float currentHeath, float maxHeath)
+    {
+        slider.value = currentHeath / maxHeath;
     }
 
     void OnTriggerEnter2D(Collider2D collision)
@@ -43,8 +70,8 @@ public class Bot : Character
     {
         if (collision.gameObject.layer == CacheString.PLAYER_LAYER)
         {
-            UIManager.Instance.LosingPanel.gameObject.SetActive(true);
-            Time.timeScale = 0f;
+            GameManager.Instance.Heal--;
+            GameManager.Instance.GetShot(GameManager.Instance.Heal, 5);
         }
     }
 }

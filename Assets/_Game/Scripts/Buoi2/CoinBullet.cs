@@ -25,13 +25,19 @@ public class CoinBullet : MonoBehaviour
 
         if (collision.gameObject.layer == CacheString.ENEMY_LAYER)
         {
-            Destroy(collision.gameObject);
+            ((Plant)character).Heath--;
+            ((Plant)character).GetShot(((Plant)character).Heath, 2);
+            if (((Plant)character).Heath <= 0)
+            {
+                Destroy(collision.gameObject);
+            }
             Destroy(this.gameObject);
         }
 
         if (collision.gameObject.layer == CacheString.BOAR_LAYER)
         {
             ((Bot)character).Life--;
+            ((Bot)character).GetShot(((Bot)character).Life, 3);
             Destroy(this.gameObject);
 
             if (((Bot)character).Life <= 0)
